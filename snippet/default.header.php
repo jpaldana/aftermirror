@@ -8,6 +8,13 @@
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
 		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+		<?php
+			if (isset($data) && isset($data["css"])) {
+				foreach ($data["css"] as $css) {
+					echo "<link rel='stylesheet' href='{$css}' />";
+				}
+			}
+		?>
 	</head>
 	<body class="landing">
 

@@ -1,28 +1,33 @@
+<?php
+include("module/GitStatus.php");
+$gitStatus = new gitStatus();
+$_gitHeadStatus = $gitStatus->getGitCommitHead();
+?>
 		</div>
 		
 		<!-- Footer -->
 			<footer id="footer">
 				<div class="inner">
 					<ul class="icons">
-						<li><a href="#" class="icon fa-video-camera">
+						<li><a href="/watch.do" class="icon fa-video-camera">
 							<span class="label">Anime</span>
 						</a></li>
-						<li><a href="#" class="icon fa-music">
+						<li><a href="/music.do" class="icon fa-music">
 							<span class="label">Music</span>
 						</a></li>
-						<li><a href="#" class="icon fa-picture-o">
+						<li><a href="/gallery.do" class="icon fa-picture-o">
 							<span class="label">Gallery</span>
 						</a></li>
-						<li><a href="#" class="icon fa-book">
+						<li><a href="/library.do" class="icon fa-book">
 							<span class="label">Library</span>
 						</a></li>
-						<li><a href="#" class="icon fa-cloud">
+						<li><a href="/cloud.do" class="icon fa-cloud">
 							<span class="label">Storage</span>
 						</a></li>
 					</ul>
 					<ul class="copyright">
-						<li>made with <i class="fa fa-heart"></i> &mdash; <a href="https://aftermirror.com">after|mirror</a></li>
-						<li>design: <a href="http://designscrazed.org/">TEMPLATE</a>.</li>
+						<li>made with <i class="fa fa-heart"></i> &mdash; <a href="https://aftermirror.com">after|mirror</a> build.<?php echo $gitStatus->getGitCommitHead() . " (" . $gitStatus->lastModified() . " ago)"; ?></li>
+						<li>design: <a href="https://templated.co/">TEMPLATE</a>.</li>
 					</ul>
 				</div>
 			</footer>

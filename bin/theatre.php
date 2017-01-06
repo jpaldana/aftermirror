@@ -92,5 +92,5 @@ if (isset($_GET["m"])) {
 
 //print_a($data);
 
-$page->block("footer", array("js" => array("https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.5/socket.io.min.js", "https://cdnjs.cloudflare.com/ajax/libs/jquery-scrollTo/2.1.2/jquery.scrollTo.min.js", "https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.1/js.cookie.min.js", "https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.10/clipboard.min.js", "https://cdnjs.cloudflare.com/ajax/libs/featherlight/1.4.0/featherlight.min.js", "/bin.js/theatre.js")));
+$page->block("footer", array("js" => array("https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.5/socket.io.min.js", "https://cdnjs.cloudflare.com/ajax/libs/jquery-scrollTo/2.1.2/jquery.scrollTo.min.js", "https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.1/js.cookie.min.js", "https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.10/clipboard.min.js", "https://cdnjs.cloudflare.com/ajax/libs/featherlight/1.4.0/featherlight.min.js", "/assets/js/theatre.js")));
 ?>

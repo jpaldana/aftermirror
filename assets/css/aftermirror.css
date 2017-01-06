@@ -96,10 +96,7 @@ table.table-dark td { color: black; }
 .recDiv .recMiniUser i { opacity: 0.825; }
 */
 
-/* gallery */
-.gallery-title { position: absolute; bottom: 0; left: 0; right: 0; padding: 8px; background-color: rgba(0, 0, 0, 0.75); color: white; }
-.gallery-thumb { height: 200px; background-size: cover; background-position: center center; transition: box-shadow 0.25s; margin-bottom: 20px; position: relative; cursor: pointer; }
-.gallery-thumb:hover { box-shadow: 0 0 4px black, 0 0 8px black; z-index: 999; }
+
 
 /* mango */
 @media screen and (max-width: 767px) {

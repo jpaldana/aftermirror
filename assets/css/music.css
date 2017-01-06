@@ -1,0 +1,11 @@
+img.artwork {
+	max-width: 200px;
+	max-height: 100px;
+}
+span.mediaitem {
+	transition: all 0.25s ease;
+}
+span.mediaitem:hover {
+	color: #51BAA4;
+	cursor: pointer;
+}

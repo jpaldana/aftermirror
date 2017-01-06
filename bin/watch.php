@@ -49,7 +49,6 @@ foreach ($col as $title => $blob) {
 	if (file_exists($bgPath)) {
 		$background = $bgPath;
 	}
-	$content .= "<small>ID: {$titleHash}</small>";
 	
 	$content .= "<table class='alt'>";
 	foreach ($blob as $episode => $links) {
@@ -66,6 +65,7 @@ foreach ($col as $title => $blob) {
 		$content .= "</td></tr>";
 	}
 	$content .= "</table>";
+	$content .= "<h6>ID: {$titleHash}</h6>";
 	
 	$page->block("spanner", array("image" => $background, "title" => $title, "content" => $content, "href" => false, "text" => false));
 }
