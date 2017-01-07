@@ -199,6 +199,12 @@ else {
 					";
 				break;
 				case "zip":
+					echo "
+						<a class='button' href='{$ax}&download'>Download: {$file}</a>
+						<a class='button' href='{$ax2}'>Share</a>
+						<br />
+						<br />
+					";
 					echo "<pre><code>";
 					$zip = new ZipArchive;
 					if ($zip->open("{$rootDir}/{$file}") === true) {
