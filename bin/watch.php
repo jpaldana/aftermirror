@@ -21,9 +21,16 @@ foreach ($json as $file) {
 	
 	$prefix = $title;
 	$suffix = -1;
-	if (strc($title, " - ")) {
+	if (substr($title, 0, 6) == "Ghibli") {
+		$prefix = substr($title, stripos($title, " - ") + 3);
+	}
+	elseif (strc($title, " - ")) {
 		$prefix = substr($title, 0, strripos($title, " - "));
 		$suffix = substr($title, strripos($title, " - ") + 3);
+		if (strc($suffix, "(")) {
+			// 01 (720p Blu-ray ....)
+			$suffix = substr($suffix, 0, stripos($suffix, "("));
+		}
 	}
 	elseif (is_numeric(substr($title, strripos($title, " ")))) {
 		// Title of anime 01
@@ -58,7 +65,7 @@ foreach ($col as $title => $blob) {
 			$content .= "<tr><td><b>Episode {$episode}</b> &mdash; {$ts} ago</td><td>";
 		}
 		else {
-			$content .= "<tr><td><b>Movie</b> &mdash; {$ts} ago</td><td>";
+			$content .= "<tr><td style='padding: 100px 0;'><b>Movie</b> &mdash; {$ts} ago</td><td>";
 		}
 		foreach ($links as $type => $src) {
 			$media_enc = base64_encode(serialize(array("src" => $src, "title" => $title, "episode" => $episode, "hash" => $titleHash)));
