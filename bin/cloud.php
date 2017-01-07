@@ -6,7 +6,7 @@ function transferGen($resource, $arg = "/cloud.ps?v=") {
 if (isset($_GET["s"])) {
 	$page->show("header");
 
-	$page->block("spanner-large", array("image" => "images/bg-cloud.jpg", "title" => "upload files?", "content" => "Too lazy to use proper cloud storage?", "href" => false, "text" => false));
+	$page->block("spanner-largeoffset", array("image" => "images/bg-cloud.jpg", "title" => "upload files?", "content" => "Too lazy to use proper cloud storage?", "href" => false, "text" => false));
 	
 	$v = @fnDecrypt(base64_decode($_GET["s"]));
 	if ($v) {
@@ -100,7 +100,7 @@ else {
 
 	$page->show("header");
 
-	$page->block("spanner-large", array("image" => "images/bg-cloud.jpg", "title" => "upload files?", "content" => "Too lazy to use proper cloud storage?", "href" => false, "text" => false));
+	$page->block("spanner-largeoffset", array("image" => "images/bg-cloud.jpg", "title" => "upload files?", "content" => "Too lazy to use proper cloud storage?", "href" => false, "text" => false));
 	
 	$page->block("spanner", array("image" => false, "title" => "", "content" => "A really small (private) cloud storage for whatever you need.", "href" => "/cloud.do", "text" => "home"));
 	

@@ -10,7 +10,7 @@ if (isset($_GET["m"])) {
 else {
 	$page->block("header", array("css" => array("/assets/css/music.css")));
 
-	$page->block("spanner", array("image" => "images/bg-music.jpg", "title" => "listen to music?", "content" => "Did you want to listen to that wonderful soundtrack that brought tears to your eyes?", "href" => false, "text" => false));
+	$page->block("spanner-largeoffset", array("image" => "images/bg-music.jpg", "title" => "listen to music?", "content" => "Did you want to listen to that wonderful soundtrack that brought tears to your eyes?", "href" => false, "text" => false));
 
 	$page->block("spanner", array("image" => false, "title" => "current listing", "content" => "Please note that user uploads are currently not available.<br/>Ask the site admin if there are any music requests.", "href" => false, "text" => false, "article" => ""));
 

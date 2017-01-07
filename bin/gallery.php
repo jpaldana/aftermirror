@@ -22,7 +22,7 @@ else {
 	else {
 		$page->block("header", array("css" => array("https://cdnjs.cloudflare.com/ajax/libs/featherlight/1.7.0/featherlight.min.css", "/assets/css/gallery.css")));
 
-		$page->block("spanner", array("image" => "images/bg-gallery.jpg", "title" => "look at the gallery?", "content" => "How about checking out some of the artwork collected throughout the various realms of the internet?", "href" => false, "text" => false));
+		$page->block("spanner-largeoffset", array("image" => "images/bg-gallery.jpg", "title" => "look at the gallery?", "content" => "How about checking out some of the artwork collected throughout the various realms of the internet?", "href" => false, "text" => false));
 		
 		$page->block("spanner", array("image" => false, "title" => "gallery options", "content" => "<a class='button small' href='/gallery.do'>Home</a> <a class='button small' href='/gallery.do?do=new'>New</a>", "href" => false, "text" => false, "article" => ""));
 	}
@@ -156,14 +156,8 @@ else {
 				";
 			}
 			$creator = $auth->getUsername($info["creator"]);
-			echo "
-				<div>
-						<h2 class='page-header'><span class='profile-picture-circle-md' style='background-image: url(/user/{$creator}/profile.jpg);'></span> &quot;{$info['title']}&quot; by {$creator}</h2>
-				</div>
-			";
-			if (strlen($info["description"]) > 0) {
-				echo "<blockquote>{$info['description']}</blockquote>";
-			}
+			
+			$page->block("spanner", array("image" => false, "title" => "{$info['title']} by {$creator}", "content" => $info['description'], "href" => false, "text" => false));
 			
 			$media = $gallery->getCollectionMedia($_GET["gallery"]);
 			if (count($media) === 0) {
@@ -182,7 +176,7 @@ else {
 				foreach (array_reverse($media, true) as $id => $data) {
 					$srcEnc = base64_encode($data["source"]);
 					echo "
-						<div class='4u$(xsmall) 3u$(small) 3u'>
+						<div class='12u$(xsmall) 12u$(small) 3u'>
 							<div class='gallery-thumb' style='background-image: url(/gallery.ps?t={$srcEnc});' data-featherlight='/gallery.ps?do=iview&image={$srcEnc}&g={$_GET['gallery']}&mid={$id}'>
 							</div>
 						</div>
@@ -207,7 +201,7 @@ else {
 			requireLogin();
 			$info = $gallery->getCollectionAttributes($_GET["gallery"]);
 			if ($info["creator"] !== AUTH_UID) {
-				echo "<script>location.href = '/app/Gallery';</script>";
+				echo "<script>location.href = '/gallery.do';</script>";
 				echo "<p>Not allowed.</p>";
 			}
 			else {
@@ -258,7 +252,7 @@ else {
 			}
 			else {
 				echo "
-					<div class='row uniform 75%'>
+					<div class='row uniform 50%'>
 				";
 				foreach ($collections as $id => $title) {
 					$media = $gallery->getCollectionMedia($id);
@@ -268,7 +262,7 @@ else {
 						$banner = array_pop($media);
 						$bannerEnc = base64_encode($banner["source"]);
 						echo "
-							<div class='6u$(xsmall) 6u$(small) 4u'>
+							<div class='12u$(xsmall) 12u$(small) 4u'>
 								<a href='/gallery.do?do=view&gallery={$id}'><div class='gallery-thumb' style='background-image: url(/gallery.ps?t={$bannerEnc});'>
 									<span class='gallery-title'><b>{$title}</b> &mdash; {$creator}</span>
 								</div></a>
@@ -277,7 +271,7 @@ else {
 					}
 					else {
 						echo "
-							<div class='6u$(xsmall) 6u$(small) 4u'>
+							<div class='12u$(xsmall) 12u$(small) 4u'>
 								<a href='/gallery.do?do=view&gallery={$id}'><div class='gallery-thumb'>
 									<span class='gallery-title'><b>{$title}</b> &mdash; {$creator}</span>
 								</div></a>

@@ -9,7 +9,7 @@ $style = isset($data["style"]) ? $data["style"] : "";
 
 if ($img) {
 	echo "
-		<section class='wrapper style3 special darkspan' style='background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url({$img}); height: 480px; padding-top: 140px;{$style}'>
+		<section class='wrapper style3 special darkspan' style='background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url({$img}); height: 480px; padding-top: 200px;{$style}'>
 	";
 }
 else {

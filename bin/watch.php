@@ -3,7 +3,7 @@ requireLogin();
 
 $page->show("header");
 
-$page->block("spanner", array("image" => "images/bg-anime.jpg", "title" => "watch stuff?", "content" => "Watch a select collection of anime and movies, with friends (if that's what you prefer!)", "href" => false, "text" => false));
+$page->block("spanner-largeoffset", array("image" => "images/bg-anime.jpg", "title" => "watch stuff?", "content" => "Watch a select collection of anime and movies, with friends (if that's what you prefer!)", "href" => false, "text" => false));
 
 $page->block("spanner", array("image" => false, "title" => "current listing", "content" => "Here is the current listing on after|mirror.", "href" => false, "text" => false, "article" => ""));
 
