@@ -41,6 +41,16 @@ if (isset($_GET["s"])) {
 							<img src='{$ax}&hx=image/jpg' style='max-width: 100%;' data-featherlight='{$ax}' />
 						";
 					break;
+					case "zip":
+						echo "<pre><code>";
+						$zip = new ZipArchive;
+						if ($zip->open("{$rootDir}/{$file}") === true) {
+							for ($i = 0; $i < $zip->numFiles; $i++) {
+								echo $zip->getNameIndex($i) . "\n";
+							}
+						}
+						echo "</code></pre>";
+					break;
 					default:
 						echo "
 							<p>File preview not supported.</p>
@@ -187,6 +197,16 @@ else {
 						<br />
 						<img src='{$ax}&hx=image/jpg' style='max-width: 100%;' data-featherlight='{$ax}' />
 					";
+				break;
+				case "zip":
+					echo "<pre><code>";
+					$zip = new ZipArchive;
+					if ($zip->open("{$rootDir}/{$file}") === true) {
+						for ($i = 0; $i < $zip->numFiles; $i++) {
+							echo $zip->getNameIndex($i) . "\n";
+						}
+					}
+					echo "</code></pre>";
 				break;
 				default:
 					echo "
