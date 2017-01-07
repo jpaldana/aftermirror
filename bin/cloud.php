@@ -1,11 +1,74 @@
 <?php
-requireLogin();
-
-function transferGen($resource) {
-	return "/cloud.ps?v=" . base64_encode(fnEncrypt($resource . '|' . time()));
+function transferGen($resource, $arg = "/cloud.ps?v=") {
+	return "{$arg}" . base64_encode(fnEncrypt($resource . '|' . time()));
 }
+	
+if (isset($_GET["s"])) {
+	$page->show("header");
 
-if (isset($_GET["v"])) {
+	$page->block("spanner-large", array("image" => "images/bg-cloud.jpg", "title" => "upload files?", "content" => "Too lazy to use proper cloud storage?", "href" => false, "text" => false));
+	
+	$v = @fnDecrypt(base64_decode($_GET["s"]));
+	if ($v) {
+		$timestamp = substr($v, strripos($v, "|") + 1);
+		$file = substr($v, 0, strripos($v, "|"));
+		$timedelta = time() - $timestamp;
+		if ($timedelta <= 3600 * 24) {
+			$bn = basename($file);
+			$ax = transferGen($file);
+			
+			if (file_exists($file)) {
+				$page->block("spanner", array("image" => false, "title" => $bn, "content" => "Click the button below to download this file.<br/>after|mirror assumes no responsibility for any files uploaded on this website.", "href" => $ax, "text" => "Download {$bn}"));
+				
+				echo "
+				<section class='wrapper'>
+				<div class='inner'>
+				<article>
+					<h2>Preview</h2>
+				";
+				
+				switch (fext($file)) {
+					case "txt":
+						echo "<pre><code>";
+						echo file_get_contents("{$rootDir}/{$file}");
+						echo "</code></pre>";
+					break;
+					case "jpg":
+					case "bmp":
+					case "png":
+					case "gif":
+						echo "
+							<img src='{$ax}&hx=image/jpg' style='max-width: 100%;' data-featherlight='{$ax}' />
+						";
+					break;
+					default:
+						echo "
+							<p>File preview not supported.</p>
+						";
+					break;
+				}
+				
+				echo "
+				</article>
+				</div>
+				</section>
+				";
+			}
+			else {
+				$page->block("spanner", array("image" => false, "title" => "invalid link!", "content" => "The file you have requested is no longer on these servers.", "href" => "/cloud.do", "text" => "return to cloud"));
+			}
+		}
+		else {
+			$page->block("spanner", array("image" => false, "title" => "invalid link!", "content" => "The link you clicked is no longer valid. Please request a new link.", "href" => "/cloud.do", "text" => "return to cloud"));
+		}
+	}
+	else {
+		$page->block("spanner", array("image" => false, "title" => "invalid link!", "content" => "Oops, you shouldn't be seeing this. (error: failed to parse request.)", "href" => "/cloud.do", "text" => "return to cloud"));
+	}
+	
+	$page->show("footer");
+}
+elseif (isset($_GET["v"])) {
 	$v = @fnDecrypt(base64_decode($_GET["v"]));
 	if ($v) {
 		$timestamp = substr($v, strripos($v, "|") + 1);
@@ -33,9 +96,11 @@ if (isset($_GET["v"])) {
 	}
 }
 else {
+	requireLogin();
+
 	$page->show("header");
 
-	$page->block("spanner", array("image" => "images/bg-cloud.jpg", "title" => "upload files?", "content" => "Too lazy to use proper cloud storage?", "href" => false, "text" => false));
+	$page->block("spanner-large", array("image" => "images/bg-cloud.jpg", "title" => "upload files?", "content" => "Too lazy to use proper cloud storage?", "href" => false, "text" => false));
 	
 	$page->block("spanner", array("image" => false, "title" => "", "content" => "A really small (private) cloud storage for whatever you need.", "href" => "/cloud.do", "text" => "home"));
 	
@@ -97,36 +162,39 @@ else {
 	elseif (isset($_GET["view"])) {
 		$file = basename($_GET["view"]);
 		$ax = transferGen("{$rootDir}/{$file}");
+		$ax2 = transferGen("{$rootDir}/{$file}", "/cloud.do?s=");
 		if (file_exists("{$rootDir}/{$file}")) {
 			switch (fext($file)) {
 				case "txt":
 					echo "
-						<a href='/cloud.do?createNewFile&src={$file}' class='btn btn-xs btn-primary content-link' data-title='Storage: Edit/Clone'>Edit/Clone File</a>
-						<a class='btn btn-xs btn-primary' href='{$ax}&download'>Download: {$file}</a>
-						<div class='well'>
-							<pre>";
+						<a href='/cloud.do?createNewFile&src={$file}' class='button content-link' data-title='Storage: Edit/Clone'>Edit/Clone File</a>
+						<a class='button' href='{$ax}&download'>Download: {$file}</a>
+						<a class='button' href='{$ax2}'>Share</a>
+						<br />
+						<br />
+						<pre><code>";
 					echo file_get_contents("{$rootDir}/{$file}");
-					echo "</pre>
-						</div>
-					";
+					echo "</code></pre>";
 				break;
 				case "jpg":
 				case "bmp":
 				case "png":
 				case "gif":
 					echo "
-						<a class='btn btn-xs btn-primary' href='{$ax}&download'>Download: {$file}</a>
-						<div class='well' style='text-align: center;'>
-							<img src='{$ax}&hx=image/jpg' style='max-width: 100%;' data-featherlight='{$ax}&hx=image/jpg#.jpg' />
-						</div>
+						<a class='button' href='{$ax}&download'>Download: {$file}</a>
+						<a class='button' href='{$ax2}'>Share</a>
+						<br />
+						<br />
+						<img src='{$ax}&hx=image/jpg' style='max-width: 100%;' data-featherlight='{$ax}' />
 					";
 				break;
 				default:
 					echo "
-						<a class='btn btn-xs btn-primary' href='{$ax}&download'>Download: {$file}</a>
-						<div class='well'>
-							<p>File preview not supported.</p>
-						</div>
+						<a class='button' href='{$ax}&download'>Download: {$file}</a>
+						<a class='button' href='{$ax2}'>Share</a>
+						<br />
+						<br />
+						<p>File preview not supported.</p>
 					";
 				break;
 			}
@@ -188,6 +256,6 @@ else {
 	</section>
 	";
 
-	$page->block("footer", array("js" => array("https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.0/notify.min.js", "/assets/js/storage.js")));	
+	$page->block("footer", array("js" => array("https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.0/notify.min.js", "/assets/js/storage.js")));		
 }
 ?>
