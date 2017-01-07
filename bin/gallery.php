@@ -170,15 +170,16 @@ else {
 			}
 			else {
 				echo "
-					<div class='row uniform 75%'>
+					<div class='row 50% uniform'>
 				";
 				
 				foreach (array_reverse($media, true) as $id => $data) {
 					$srcEnc = base64_encode($data["source"]);
 					echo "
-						<div class='12u$(xsmall) 12u$(small) 3u'>
-							<div class='gallery-thumb' style='background-image: url(/gallery.ps?t={$srcEnc});' data-featherlight='/gallery.ps?do=iview&image={$srcEnc}&g={$_GET['gallery']}&mid={$id}'>
-							</div>
+						<div class='3u'>
+							<span class='image fit' data-featherlight='/gallery.ps?do=iview&image={$srcEnc}&g={$_GET['gallery']}&mid={$id}'>
+								<img src='/gallery.ps?t={$srcEnc}' alt='' />
+							</span>
 						</div>
 					";
 				}
@@ -252,7 +253,8 @@ else {
 			}
 			else {
 				echo "
-					<div class='row uniform 50%'>
+					<div class='box alt'>
+					<div class='row 50% uniform'>
 				";
 				foreach ($collections as $id => $title) {
 					$media = $gallery->getCollectionMedia($id);
@@ -262,24 +264,30 @@ else {
 						$banner = array_pop($media);
 						$bannerEnc = base64_encode($banner["source"]);
 						echo "
-							<div class='12u$(xsmall) 12u$(small) 4u'>
-								<a href='/gallery.do?do=view&gallery={$id}'><div class='gallery-thumb' style='background-image: url(/gallery.ps?t={$bannerEnc});'>
-									<span class='gallery-title'><b>{$title}</b> &mdash; {$creator}</span>
-								</div></a>
+							<div class='4u'>
+								<span class='image fit'>
+									<a href='/gallery.do?do=view&gallery={$id}'>
+										<img src='/gallery.ps?t={$bannerEnc}' alt='' />
+										<span class='gallery-title'><b>{$title}</b> &mdash; {$creator}</span>
+									</a>
+								</span>
 							</div>
 						";
 					}
 					else {
 						echo "
-							<div class='12u$(xsmall) 12u$(small) 4u'>
-								<a href='/gallery.do?do=view&gallery={$id}'><div class='gallery-thumb'>
-									<span class='gallery-title'><b>{$title}</b> &mdash; {$creator}</span>
-								</div></a>
+							<div class='4u'>
+								<span class='image fit'>
+									<a href='/gallery.do?do=view&gallery={$id}'>
+										<span class='gallery-title'><b>{$title}</b> &mdash; {$creator}</span>
+									</a>
+								</span>
 							</div>
 						";
 					}
 				}
 				echo "
+					</div>
 					</div>
 				";
 			}
