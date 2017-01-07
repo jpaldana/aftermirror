@@ -249,5 +249,29 @@ function iTF($inputFileName, $fileName, $maxSize, $quality = 100) {
 	}
 	return true;
 }
+function cfgc($url, $cachetime = 3600) {
+	$hash = sha1($url);
+	$full = "cache/{$hash[0]}/{$hash[1]}/{$hash}";
+	if (!is_dir("cache")) mkdir("cache");
+	if (!is_dir("cache/" . $hash[0])) mkdir("cache/" . $hash[0]);
+	if (!is_dir("cache/" . $hash[0] . "/" . $hash[1])) mkdir("cache/" . $hash[0] . "/" . $hash[1]);
+	if (!file_exists($full) || time() - filemtime($full) >= $cachetime) {
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
 
+		$headers = array();
+		$headers[] = "accept-language: en-US,en;q=0.8,da;q=0.6";
+		$headers[] = "user-agent: aftermirror/cached-get";
+
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+		$result = curl_exec($ch);
+		curl_close($ch);
+
+		if ($result) file_put_contents($full, $result);
+	}
+	return file_get_contents($full);
+};
 ?>

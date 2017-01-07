@@ -1,5 +1,6 @@
 data/
 node.js/node_modules/
 config/
+cache/
 *.db
 *.key

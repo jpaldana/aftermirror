@@ -7,7 +7,7 @@ $page->block("spanner-largeoffset", array("image" => "images/bg-anime.jpg", "tit
 
 $page->block("spanner", array("image" => false, "title" => "current listing", "content" => "Here is the current listing on after|mirror.", "href" => false, "text" => false, "article" => ""));
 
-$json = json_decode(file_get_contents("https://owl.aftermirror.com/json.php"), true);
+$json = json_decode(cfgc("https://owl.aftermirror.com/json.php"), true);
 $col = array();
 $colt = array();
 foreach ($json as $file) {
@@ -37,7 +37,8 @@ foreach ($json as $file) {
 	}
 	$col[$prefix][$suffix][$type] = "https://owl.aftermirror.com/" . $file["src"];
 	
-	if (!isset($colt[$bn]) || $colt[$bn] < $file["time"]) $colt[$bn] = $file["time"];
+	$sfx = "{$prefix}{$suffix}";
+	if (!isset($colt[$sfx]) || $colt[$sfx] < $file["time"]) $colt[$sfx] = $file["time"];
 }
 knatsort($col);
 
@@ -52,11 +53,12 @@ foreach ($col as $title => $blob) {
 	
 	$content .= "<table class='alt'>";
 	foreach ($blob as $episode => $links) {
+		$ts = time_since(time() - $colt["{$title}{$episode}"]);
 		if ($episode > 0) {
-			$content .= "<tr><td><b>Episode {$episode}</b></td><td>";
+			$content .= "<tr><td><b>Episode {$episode}</b> &mdash; {$ts} ago</td><td>";
 		}
 		else {
-			$content .= "<tr><td><b>Movie</b></td><td>";
+			$content .= "<tr><td><b>Movie</b> &mdash; {$ts} ago</td><td>";
 		}
 		foreach ($links as $type => $src) {
 			$media_enc = base64_encode(serialize(array("src" => $src, "title" => $title, "episode" => $episode, "hash" => $titleHash)));
