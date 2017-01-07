@@ -30,7 +30,7 @@ if (isset($_GET["s"])) {
 				switch (fext($file)) {
 					case "txt":
 						echo "<pre><code>";
-						echo file_get_contents("{$rootDir}/{$file}");
+						echo file_get_contents("{$file}");
 						echo "</code></pre>";
 					break;
 					case "jpg":
@@ -44,7 +44,7 @@ if (isset($_GET["s"])) {
 					case "zip":
 						echo "<pre><code>";
 						$zip = new ZipArchive;
-						if ($zip->open("{$rootDir}/{$file}") === true) {
+						if ($zip->open("{$file}") === true) {
 							for ($i = 0; $i < $zip->numFiles; $i++) {
 								echo $zip->getNameIndex($i) . "\n";
 							}
