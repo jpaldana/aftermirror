@@ -212,11 +212,11 @@ socket.on('ready media', function(data) {
 	else {
 		if (typeof data.media.SD == "string") {
 			$('#kazoku-media').attr('src', data.media.SD);
-			kazokuLog('!', 'Loaded SD stream: ' + data.title + ' - Episode ' + data.episode);
+			kazokuLog('!', 'Loaded SD stream: ' + data.title);
 		}
 		else if (typeof data.media.HD == "string") {
 			$('#kazoku-media').attr('src', data.media.HD);
-			kazokuLog('!', 'Loaded HD stream: ' + data.title + ' - Episode ' + data.episode);
+			kazokuLog('!', 'Loaded HD stream: ' + data.title);
 		}
 		else {
 			kazokuLog('[error] system', 'No matching source files.');
@@ -403,6 +403,10 @@ function kazokuJSHook() {
 			e.preventDefault();
 		}
 	});
+	// check for preload (init)
+	if (preload.length > 0) {
+		kazokuLoadMedia(preload_title, { SD: preload });
+	}
 	new Clipboard('.kazoku-clipboard-btn');
 	kazokuJSHookActive = true;
 }

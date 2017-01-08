@@ -95,5 +95,5 @@
 .kazoku-profile-picture span.status { position: absolute; left: 0; top: 0; padding: 0px 8px; background-color: rgba(0, 0, 0, 0.6); font-size: 0.625em; }
 
 #kazoku-log { width: 100%; height: 96px; overflow: auto; font-size: 0.8em; margin-top: 20px; }
-.kazoku-clipboard-wrapper { float: left; display: inline-block; width: 300px; margin: 1px 8px; }
-.kazoku-clipboard-wrapper input, .kazoku-clipboard-wrapper span { height: 26px; padding: 0 8px; }
+.kazoku-clipboard-wrapper { display: inline-block; margin: 1px 8px; width: 500px; }
+.kazoku-clipboard-wrapper input { display: inline-block !important; width: 380px; height: 26px; padding: 0 8px; }

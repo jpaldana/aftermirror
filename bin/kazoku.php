@@ -60,8 +60,12 @@ if (isset($_GET["picker"])) {
 	}
 }
 else {
+	requireLogin();
+	
+	var_dump(AUTH_USER);
 	$page->block("header", array("css" => array("/assets/css/kazoku.css", "/assets/css/kazoku-range.css")));
-	$preload = false;
+	$preload = "";
+	$preload_title = "";
 	
 	$roomID = AUTH_USER . "-" . substr(sha1(uniqid()), 0, 3);
 	if (isset($_GET["r"])) $roomID = $_GET["r"];
@@ -75,6 +79,7 @@ else {
 			$background = false;
 			if (file_exists($bgPath)) $background = $bgPath;
 			$description = (is_numeric($media["episode"])) ? "Episode {$media['episode']}" : $media["episode"];
+			$preload_title = $media["title"];
 			
 			$page->block("spanner-largeoffset", array("image" => $background, "title" => $media["title"], "content" => $description, "href" => false, "text" => false));
 		}
@@ -94,7 +99,7 @@ else {
 	<div class='row 50% uniform'>
 		<div class='9u 12u$(small) kazoku-wrapper' style='background-color: #000;'>
 			<video id='kazoku-media' style='box-sizing: border-box; width: 98%; min-height: 400px;'>
-				<source src='{$preload}' type='video/mp4' />
+				<source src='' type='video/mp4' />
 			</video>
 			<div id='control'>
 				<input type='range' id='ctl_seeker' value='0' max='1' />
@@ -135,12 +140,21 @@ else {
 	";
 
 	echo "
+
+	<div class='kazoku-clipboard-wrapper'>
+		Invite URL 
+		<input type='text' class='form-control' id='kazoku-roomURL' value='https://aftermirror.com/kazoku.do?r={$roomID}' readonly />
+		<span class='kazoku-clipboard-btn' data-clipboard-target='#kazoku-roomURL'><i class='fa fa-clipboard'></i></span>
+	</div>
+	
 	</article>
 	</div>
 	</section>
 	<script>
 		var name = '" . AUTH_USER . "';
 		var room = '{$roomID}';
+		var preload_title = '{$preload_title}';
+		var preload = '{$preload}';
 	</script>
 	";
 
