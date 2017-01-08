@@ -96,9 +96,9 @@ else {
 	<article>
 
 	<div style='width: 100%;' id='kazoku-popout'>
-	<div class='row 50% uniform'>
-		<div class='9u 12u$(small) kazoku-wrapper' style='background-color: #000;'>
-			<video id='kazoku-media' style='box-sizing: border-box; width: 98%; min-height: 400px;'>
+	<div class='row uniform'>
+		<div class='9u 12u$(small) kazoku-wrapper' style='background-color: #000; padding: 0;'>
+			<video id='kazoku-media' style='box-sizing: border-box; width: 100%; min-height: 400px;'>
 				<source src='' type='video/mp4' />
 			</video>
 			<div id='control'>
