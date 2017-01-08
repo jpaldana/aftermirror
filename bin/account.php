@@ -66,6 +66,8 @@ else {
 		<progress id='profile-picture-file-upl-progress' value='0' max='1' style='width: 100%; display: none;'></progress>
 	</div>
 	<div class='6u 12u$(small)'>
+		<h2>Statistics</h2>
+		<p>Nothing here, yet!</p>
 	</div>
 	";
 

@@ -1,0 +1,99 @@
+.poster-wrapper {
+	height: 100vw;
+	width: 220px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	transform:rotate(-90deg) translateY(-220px);
+	transform-origin: right top;
+}
+.poster-wrapper > div {
+	width: 200px;
+	height: 200px;
+	transform: rotate(90deg);
+	transform-origin: right top;
+}
+#outerBrowseDialog {
+	height: 200px;
+	overflow: hidden;
+	text-align: center;
+	padding: 0;
+	position: relative;
+}
+#innerBrowseDialog {
+	position: relative;
+	top: -20px;
+}
+.poster {
+	font-weight: bold;
+	text-shadow: 1px 1px #000;
+	position: relative;
+	background-size: cover;
+	background-position: center center;
+}
+.posterText {
+	color: white;
+	background-color: rgba(0, 0, 0, 0.65);
+	display: inline-block;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+}
+.posterBtn {
+	position: absolute;
+	left: 40%;
+	top: 40%;
+	font-size: 3em;
+	opacity: 0.8;
+}
+.queryBox {
+	text-shadow: 1px 1px #000;
+	margin-top: 20px;
+	padding-top: 10px;
+	padding-bottom: 20px;
+	background-size: cover;
+	background-position: center center;
+}
+.queryBox option {
+	background-color: white;
+	color: black;
+}
+.kazoku-wrapper {
+	position: relative;
+}
+#control {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+#chat {
+	height: 350px;
+	overflow-y: auto;
+	font-size: 0.8em;
+}
+#chat:hover {
+	overflow-y: auto;
+}
+
+/* kazoku */
+#kazoku-popout.dark { background-color: #000 !important; color: white !important; }
+.kazoku-wrapper video { width: 100%; max-height: 800px; }
+.kazoku-wrapper #control { background-color: rgba(0, 0, 0, 0.35); padding: 2px 6px; opacity: 0; font-size: 1.2em; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+.kazoku-wrapper .underbar { width: 100%; background-color: black; color: white; padding: 2px 6px; }
+.kazoku-wrapper #control .fa { margin-right: 4px; }
+.kazoku-wrapper #control .fa:hover { color: #375A7F; }
+.kazoku-wrapper #control .separator { margin-right: 16px; }
+.kazoku-wrapper:hover > #control { opacity: 1; }
+
+
+#kazoku-statusbar { width: 100%; }
+#kazoku-status-preload-progress-wrapper { display: none; }
+.kazoku-profile-picture { display: inline-block; width: 96px; height: 96px; background-size: cover; background-position: center center; text-align: center; position: relative; margin: 4px; color: white; }
+.kazoku-profile-picture span.title { position: absolute; bottom: 0; left: 0; right: 0; background-color: rgba(0, 0, 0, 0.75); font-size: 0.85em; }
+.kazoku-profile-picture span.ping { position: absolute; right: 0; top: 0; padding: 0px 8px; background-color: rgba(0, 0, 0, 0.6); font-size: 0.625em; }
+.kazoku-profile-picture span.status { position: absolute; left: 0; top: 0; padding: 0px 8px; background-color: rgba(0, 0, 0, 0.6); font-size: 0.625em; }
+
+#kazoku-log { width: 100%; height: 96px; overflow: auto; font-size: 0.8em; margin-top: 20px; }
+.kazoku-clipboard-wrapper { float: left; display: inline-block; width: 300px; margin: 1px 8px; }
+.kazoku-clipboard-wrapper input, .kazoku-clipboard-wrapper span { height: 26px; padding: 0 8px; }

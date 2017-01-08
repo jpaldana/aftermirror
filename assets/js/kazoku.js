@@ -21,45 +21,38 @@ var mediaVol = 1.0;
 var kazokuExpandedPlayer = false;
 var kazokuIsFullscreen = false;
 
-/* -- misc functions */
+var $media = $("#kazoku-media");
+
+/* -- init */
+$("#browseDialogBtn").on("click", function(e) {
+	if (!$("#browseDialog").is(":visible")) {
+		// reload
+		$("#browseDialog").fadeIn(200).html("<section class='wrapper style2' id='outerBrowseDialog'><article id='innerBrowseDialog'><div style='padding-top: 100px; text-align: center;'><h2>loading, please wait...</h2></div></article></section>");
+		$("#innerBrowseDialog").load("kazoku.ps?picker");
+	}
+	else {
+		$("#innerBrowseDialog").load("kazoku.ps?picker");
+	}
+	$(window).scrollTo("#browseDialog", 200, { offset: { top: -50 } });
+});
+$("#browseDialog").on("click", ".poster", function() {
+	$("#innerBrowseDialog").load("kazoku.ps?picker&query=" + $(this).attr("data-title"));
+});
+$("#browseDialog").on("change", ".queryLoader", function() {
+	var links = $(this).val().split("|");
+	var data = {};
+	for (var i = 0; i < links.length; i++) {
+		var split = links[i].split(";");
+		data[split[0]] = split[1];
+	}
+	kazokuLoadMedia($(this).attr("data-title"), data);
+	$("#browseDialog").hide();
+});
+
+/* -- helpers */
 function htmlEntities(str) {
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
-
-/* -- logging functions */
-
-function kazokuLogHTML(html) {
-	$('#kazoku-log').append($('<div />').html(html));
-	$('#kazoku-log').scrollTo('#kazoku-log div:last-child');
-}
-function kazokuLog(name, text) {
-	kazokuLogHTML('<b>' + name + '</b>: ' + text);
-}
-function kazokuNotifyPermissionGranted() {
-	/*
-	var kazokuNotifyGrantedNotification = new Notify('Thanks!', {
-		body: 'Notifications have been enabled successfully.'
-	});
-	kazokuNotifyGrantedNotification.show();
-	*/
-}
-function kazokuNotifyPermissionDenied() {
-	$('#kazoku-status-show-notifications').prop('checked', false);
-}
-function kazokuPreloadUpdateProgress(e) {
-	if (e.lengthComputable) {
-		var percent = Math.round((e.loaded / e.total) * 100);
-		$('#kazoku-status-preload-progress').attr('max', e.total);
-		$('#kazoku-status-preload-progress').attr('value', e.loaded);
-		$('#kazoku-status-preload-progress-text').text(percent);
-	}
-	else {
-		console.log('[preload] non-computable length...');
-	}
-}
-
-/* -- JS functions */
-
 function ss2hhmmss(seconds) {
 	seconds = parseInt(seconds);
 	var hours = Math.floor(seconds / 3600);
@@ -80,57 +73,55 @@ function ss2hhmmss(seconds) {
 		return minutes + ':' + seconds;
 	}
 }
-function chatMessageHTML(html) {
-	$('#kazoku-chat').append($('<li />').html(html));
-}
-function chatMessage(name, message) {
-	kazokuLog('[chat] ' + name, htmlEntities(message));
-	chatMessageHTML('<b>' + name + '</b>: ' + htmlEntities(message));
-	/*
-	var kazokuChatNotify = new Notify(name, {
-		body: htmlEntities(message),
-		icon: '/user/' + name + '/profile.jpg'
-	});
-	kazokuChatNotify.show();
-	*/
+function kazokuPreloadUpdateProgress(e) {
+	if (e.lengthComputable) {
+		var percent = Math.round((e.loaded / e.total) * 100);
+		$('#kazoku-status-preload-progress').attr('max', e.total);
+		$('#kazoku-status-preload-progress').attr('value', e.loaded);
+		$('#kazoku-status-preload-progress-text').text(percent);
+	}
+	else {
+		console.log('[preload] non-computable length...');
+	}
 }
 
-/* -- simple pre-debug */
+/* -- chat */
+function kazokuLogHTML(html) {
+	$div = $('<div />').html(html);
+	$('#chat').append($div);
+	$('#chat').scrollTo($div, 100);
+}
+function kazokuLog(name, text) {
+	kazokuLogHTML('<b>' + name + '</b>: ' + htmlEntities(text));
+}
 
-kazokuLog('system', 'Kazoku initializing...');
-kazokuLog('system', "* This is a work in progress. Please expect bugs and resist trying to break it, k? *");
+/* -- pre-init */
+kazokuLog('!', 'kazoku initializing...');
+kazokuLog('!', 'attempting to connect...');
+kazokuLog('!', 'connecting to (' + socketIOserver + ')...');
 
-kazokuLog('system', 'Attempting to establish connection to server...');
-kazokuLog('system', 'Connecting to (' + socketIOserver + ')...');
-
-/* -- socket init & event catching */
-
+/* -- init */
 socket = io.connect(socketIOserver);
 socket.on('connect', function() {
-	kazokuLog('socketIO', 'Connection successful.');
-	$('#kazoku-status-socketIO-connected').prop('checked', true);
+	kazokuLog('!', 'connected!');
 	kazokuEventInit();
 });
 socket.on('error', function(data) {
-	kazokuLog('[error] socketIO', data || 'Unknown error.');
-	$('#kazoku-status-socketIO-connected').prop('checked', false);
+	kazokuLog('[error]', data || 'Unknown error.');
 	kazokuEventStop();
 });
 socket.on('connect_error', function(data) {
 	$('#kazoku-media')[0].pause();
-	kazokuLog('[error] socketIO', data || 'Connection error.');
-	$('#kazoku-status-socketIO-connected').prop('checked', false);
+	kazokuLog('[error]', data || 'Connection error.');
 	kazokuEventStop();
 });
 socket.on('connect_failed', function(data) {
-	kazokuLog('[error] socketIO', data || 'Failed to connect.');
-	$('#kazoku-status-socketIO-connected').prop('checked', false);
+	kazokuLog('[error]', data || 'Failed to connect.');
 	kazokuEventStop();
 });
 socket.on('disconnect', function() {
 	$('#kazoku-media')[0].pause();
-	kazokuLog('[warn] socketIO', 'Disconnected from server!');
-	$('#kazoku-status-socketIO-connected').prop('checked', false);
+	kazokuLog('[warn]', 'disconnected! (check internet?)');
 	$('#kazoku-ping').html('&infin; ms');
 	kazokuEventStop();
 });
@@ -147,10 +138,10 @@ function socketPing() {
 function socketRoomStat() {
 	socket.emit('request room stat');
 }
-function kazokuLoadMedia(title, episode, data) {
+function kazokuLoadMedia(title, data) {
+	var episode = ""; // no longer used
 	console.log(data);
 	socket.emit('set room media', { title: title, episode: episode, src: data });
-	$.featherlight.current().close();
 };
 function videoStatUpdate() {
 	if ($('#kazoku-media').attr('src') !== '') {
@@ -168,7 +159,7 @@ function videoStatUpdate() {
 
 /* > status */
 socket.on('connection ok', function(data) {
-	kazokuLog('socketIO', 'Connection OK!');
+	kazokuLog('! [done]', 'Connection OK!');
 	socketPing();
 	socketRoomStat();
 	kazokuJSHook();
@@ -181,6 +172,7 @@ socket.on('recv room stat', function(data) {
 				$('#kazoku-statusbar').append(
 					$('<div />').attr('data-user', user)
 								.addClass('w-profile-picture kazoku-profile-picture')
+								.css('background-image', 'url(/account.ps?pic=' + user + ')')
 								.append(
 									$('<span />').addClass('title') 
 												.text(user)
@@ -194,21 +186,22 @@ socket.on('recv room stat', function(data) {
 												.text('--')
 								)
 				);
+				kazokuLogHTML("<div style='text-align: center;'><img src='/account.ps?pic=" + user + "' alt='' style='width: 100%;' /><br/>" + user + " has joined the room!</div>");
 			}
 			$('#kazoku-statusbar div[data-user=' + user + '] span.ping').text(stat.ping);
 		}
 	}
 });
 socket.on('ready media', function(data) {
-	$('#kazoku-title-activity').html(data.title + ' &mdash; Episode ' + data.episode);
+	$('#kazoku-title-activity').html(data.title);
 	if ($('#kazoku-status-prefer-hd').is(':checked')) {
 		if (typeof data.media.HD == "string") {
 			$('#kazoku-media').attr('src', data.media.HD);
-			kazokuLog('system', 'Loaded HD stream: ' + data.title + ' - Episode ' + data.episode);
+			kazokuLog('!', 'Loaded HD stream: ' + data.title);
 		}
 		else if (typeof data.media.SD == "string") {
 			$('#kazoku-media').attr('src', data.media.SD);
-			kazokuLog('system', 'Loaded SD stream: ' + data.title + ' - Episode ' + data.episode);
+			kazokuLog('!', 'Loaded SD stream: ' + data.title);
 		}
 		else {
 			kazokuLog('[error] system', 'No matching source files.');
@@ -219,11 +212,11 @@ socket.on('ready media', function(data) {
 	else {
 		if (typeof data.media.SD == "string") {
 			$('#kazoku-media').attr('src', data.media.SD);
-			kazokuLog('system', 'Loaded SD stream: ' + data.title + ' - Episode ' + data.episode);
+			kazokuLog('!', 'Loaded SD stream: ' + data.title + ' - Episode ' + data.episode);
 		}
 		else if (typeof data.media.HD == "string") {
 			$('#kazoku-media').attr('src', data.media.HD);
-			kazokuLog('system', 'Loaded HD stream: ' + data.title + ' - Episode ' + data.episode);
+			kazokuLog('!', 'Loaded HD stream: ' + data.title + ' - Episode ' + data.episode);
 		}
 		else {
 			kazokuLog('[error] system', 'No matching source files.');
@@ -232,13 +225,13 @@ socket.on('ready media', function(data) {
 		}
 	}
 	if ($('#kazoku-status-force-preload').is(':checked')) {
-		kazokuLog('system', 'Force preloading video...');
+		kazokuLog('!', 'Force preloading video...');
 		$('#kazoku-status-preload-progress-wrapper').show(200);
 		kazokuPreload = new XMLHttpRequest();
 		kazokuPreload.onload = function() {
 			$('#kazoku-media').attr('src', URL.createObjectURL(kazokuPreload.response));
 			$('#kazoku-status-preload-progress-wrapper').hide(200);
-			kazokuLog('system', 'Preload complete.');
+			kazokuLog('!', 'Preload complete.');
 		}
 		kazokuPreload.open("GET", $('#kazoku-media').attr('src'));
 		kazokuPreload.onprogress = kazokuPreloadUpdateProgress;
@@ -269,13 +262,13 @@ socket.on('player status', function(data) {
 });
 /* > chat */
 socket.on('recv chat message', function(data) {
-	chatMessage(data.username, data.message);
+	kazokuLog(data.username, data.message);
 });
 
 /* -- JS handlers */
 function kazokuJSHook() {
 	if (kazokuJSHookActive) return;
-	kazokuLog('system', 'Adding JS event handlers.');
+	kazokuLog('!', 'Adding JS event handlers.');
 	$('#kazoku-textinput').on('keydown', function(e) {
 		if (e.which == 13) {
 			socket.emit('send chat message', { message: $(this).val() });
@@ -295,67 +288,34 @@ function kazokuJSHook() {
 	$('.kazoku-wrapper .video-wrapper').on('mouseout', function() {
 		$('.control').clearQueue().animate({ opacity: 0 }, 500);
 	});
-	// media btn
-	$('#kazoku-load-media-btn').on('click', function(e) {
-		$.featherlight('/theatre.ajax.ps?do=listing');
-	});
 	// preferences
 	$('#kazoku-status-force-preload').on('click', function(e) {
 		if ($(this).is(':checked')) {
 			Cookies.set('kazoku-force-preload', true, { expires: 30, path: '/' });
-			kazokuLog('system', 'Force preload has been enabled. This will force the entire video to download video prior to starting the video.');
+			kazokuLog('!', 'Force preload has been enabled. This will force the entire video to download video prior to starting the video.');
 		}
 		else {
 			Cookies.set('kazoku-force-preload', false, { expires: 30, path: '/' });
-			kazokuLog('system', 'Force preload has been disabled.');
+			kazokuLog('!', 'Force preload has been disabled.');
 		}
 	});
 	$('#kazoku-status-prefer-hd').on('click', function(e) {
 		if ($(this).is(':checked')) {
 			Cookies.set('kazoku-prefer-hd', true, { expires: 30, path: '/' });
-			kazokuLog('system', 'Prefer HD has been enabled. The player will show HD video whenever possible.');
+			kazokuLog('!', 'Prefer HD has been enabled. The player will show HD video whenever possible.');
 		}
 		else {
 			Cookies.set('kazoku-prefer-hd', false, { expires: 30, path: '/' });
-			kazokuLog('system', 'HD is no longer preferred.');
+			kazokuLog('!', 'HD is no longer preferred.');
 		}
 	});
-	/*
-	$('#kazoku-status-show-notifications').on('click', function(e) {
-		if ($(this).is(':checked')) {
-			Cookies.set('kazoku-show-notifications', true, { expires: 30, path: '/' });
-			kazokuLog('system', 'HTML5 notifications have been enabled. Please allow notification access on your browser if a popup appears.');
-			if (!Notify.needsPermission) {
-				kazokuNotifyGranted = true;
-				console.log('Notify is granted permissions.');
-			}
-			else if (Notify.isSupported()) {
-				Notify.requestPermission(kazokuNotifyPermissionGranted, kazokuNotifyPermissionDenied);
-				kazokuNotifyGranted = true;
-			}
-			else {
-				$('#kazoku-status-show-notifications').hide(200);
-				kazokuLog('HTML5 notifications are not supported in this browser.');
-			}
-		}
-		else {
-			Cookies.set('kazoku-show-notifications', false, { expires: 30, path: '/' });
-			kazokuLog('system', 'HTML5 notifications have been disabled.');
-		}
-	});
-	*/
 	// restore preferences if set
 	if (Cookies.get('kazoku-force-preload') == 'true') {
 		$('#kazoku-status-force-preload').click();
 	}
 	if (Cookies.get('kazoku-prefer-hd') == 'true') {
 		$('#kazoku-status-prefer-hd').click();
-	} 
-	/*
-	if (Cookies.get('kazoku-show-notifications') == 'true') {
-		$('#kazoku-status-show-notifications').click();
-	} 
-	*/
+	}
 	// player controls
 	$('#ctl_play').on('click', function() {
 		socket.emit('req media control', 'play');
@@ -394,46 +354,6 @@ function kazokuJSHook() {
 		}
 	});
 	// Expanded Player
-	$('#ctl_expand_player').on('click', function() {
-		if (kazokuExpandedPlayer) {
-			kazokuExpandedPlayer = false;
-			$('.secondary-wrapper').css({
-				width: '',
-				height: '',
-				top: '',
-				left: '',
-				position: '',
-			});
-			$('.video-wrapper').css({
-				height: '',
-			});
-			$('#kazoku-media').css({
-				height: '',
-				maxHeight: '',
-			});
-			$('#kazoku-statusbar, #kazoku-log, .footer-block, #kazoku-top-infobar').fadeIn(200);
-			$('#ctl_expand_player').removeClass('fa-compress').addClass('fa-expand');
-		}
-		else {
-			kazokuExpandedPlayer = true;
-			$('.secondary-wrapper').css({
-				width: '100%',
-				height: '100%',
-				top: '0',
-				left: '0',
-				position: 'absolute',
-			});
-			$('.video-wrapper').css({
-				height: 'calc(100% - 20px)',
-			});
-			$('#kazoku-media').css({
-				height: '100%',
-				maxHeight: '100%',
-			});
-			$('#kazoku-statusbar, #kazoku-log, .footer-block, #kazoku-top-infobar').fadeOut(200);
-			$('#ctl_expand_player').removeClass('fa-expand').addClass('fa-compress');
-		}
-	});
 	$('#ctl_fullscreen').on('click', function() {
 		if (kazokuIsFullscreen) {
 			if (document.exitFullscreen) {
@@ -445,8 +365,9 @@ function kazokuJSHook() {
 			} else if (document.msExitFullscreen) {
 				document.msExitFullscreen();
 			}
-			$('#kazoku-min-log').css('background-color', 'rgba(0,0,0,0)');
 			kazokuIsFullscreen = false;
+			$("#kazoku-popout").removeClass("dark");
+			$("#chat").css("height", "350px");
 		}
 		else {
 			var i = document.getElementById('kazoku-popout');
@@ -459,8 +380,27 @@ function kazokuJSHook() {
 			} else if (i.msRequestFullscreen) {
 				i.msRequestFullscreen();
 			}
-			$('#kazoku-min-log').css('background-color', 'black');
 			kazokuIsFullscreen = true;
+			$("#kazoku-popout").addClass("dark");
+			$("#chat").css("height", "80%");
+		}
+	});
+	// escape player using escape
+	$(window).on("keydown", function(e) {
+		if (e.which == 27) {
+			if (document.exitFullscreen) {
+				document.exitFullscreen();
+			} else if (document.webkitExitFullscreen) {
+				document.webkitExitFullscreen();
+			} else if (document.mozCancelFullScreen) {
+				document.mozCancelFullScreen();
+			} else if (document.msExitFullscreen) {
+				document.msExitFullscreen();
+			}
+			kazokuIsFullscreen = false;
+			$("#kazoku-popout").removeClass("dark");
+			$("#chat").css("height", "350px");
+			e.preventDefault();
 		}
 	});
 	new Clipboard('.kazoku-clipboard-btn');
@@ -470,7 +410,7 @@ function kazokuJSHook() {
 /* -- additional handlers (socket) */
 function kazokuEventInit() {
 	if (kazokuEventHookActive) return;
-	kazokuLog('system', 'Adding event and socket handlers.');
+	kazokuLog('!', 'Adding event and socket handlers.');
 	/* -- identify */
 	socket.emit('client identify', { username: name, room: room });
 	/* -- ping/pong */
@@ -482,7 +422,7 @@ function kazokuEventInit() {
 }
 function kazokuEventStop() {
 	if (!kazokuEventHookActive) return;
-	kazokuLog('system', 'Stopping event timers.');
+	kazokuLog('!', 'Stopping event timers.');
 	clearInterval(kazokuPingPongInterval);
 	clearInterval(kazokuRoomStatInterval);
 	clearInterval(kazokuVideoStatInterval);
