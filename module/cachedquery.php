@@ -37,6 +37,7 @@ if (!file_exists("cache/picker.cache") || time() - filemtime("cache/picker.cache
 		
 		$sfx = "{$prefix}{$suffix}";
 		if (!isset($colt[$sfx]) || $colt[$sfx] < $file["time"]) $colt[$sfx] = $file["time"];
+		if (!isset($colt["__sort"][$prefix]) || $colt["__sort"][$prefix] < $file["time"]) $colt["__sort"][$prefix] = $file["time"];
 	}
 	knatsort($col);
 	file_put_contents("cache/picker.cache", serialize(array("col" => $col, "colt" => $colt)));

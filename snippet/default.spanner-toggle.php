@@ -1,6 +1,7 @@
 <?php
 $img = $data["image"];
 $title = $data["title"];
+$subtitle = $data["subtitle"];
 $content = $data["content"];
 $text = isset($data["text"]) ? $data["text"] : "View";
 
@@ -23,6 +24,7 @@ $togglehash = "tgl_" . sha1("toggle".$title);
 	<div class="inner">
 		<header class="major narrow">
 			<h2><?php echo $title; ?></h2>
+			<h5><?php echo $subtitle; ?></h5>
 			<div id="<?php echo $togglehash; ?>" style="display: none;"><?php echo $content; ?></div>
 		</header>
 		<?php
