@@ -10,23 +10,22 @@ $col = array();
 $colt = array();
 include("module/cachedquery.php");
 
-if (isset($_GET["sort"])) {
-	switch ($_GET["sort"]) {
-		case "new":
-			$col2 = $col;
-			$col = array();
-			natsort($colt["__sort"]);
-			foreach (array_reverse($colt["__sort"]) as $k => $v) {
-				$col[$k] = $col2[$k];
-			}
-			$page->block("spanner", array("image" => false, "title" => "current listing", "content" => "Here is the current listing on after|mirror.", "href" => "/watch.do?sort=abc", "text" => "sort: newest", "article" => ""));
-		break;
-		case "abc":
-		default:
-			// do nothing, $col already in alphabetical order.
-			$page->block("spanner", array("image" => false, "title" => "current listing", "content" => "Here is the current listing on after|mirror.", "href" => "/watch.do?sort=new", "text" => "sort: alphabetical", "article" => ""));
-		break;
-	}
+$sort = isset($_GET["sort"]) ? $_GET["sort"] : "abc";
+switch ($sort) {
+	case "new":
+		$col2 = $col;
+		$col = array();
+		natsort($colt["__sort"]);
+		foreach (array_reverse($colt["__sort"]) as $k => $v) {
+			$col[$k] = $col2[$k];
+		}
+		$page->block("spanner", array("image" => false, "title" => "current listing", "content" => "Here is the current listing on after|mirror.", "href" => "/watch.do?sort=abc", "text" => "sort: newest", "article" => ""));
+	break;
+	case "abc":
+	default:
+		// do nothing, $col already in alphabetical order.
+		$page->block("spanner", array("image" => false, "title" => "current listing", "content" => "Here is the current listing on after|mirror.", "href" => "/watch.do?sort=new", "text" => "sort: alphabetical", "article" => ""));
+	break;
 }
 
 foreach ($col as $title => $blob) {
