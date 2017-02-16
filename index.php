@@ -1,4 +1,5 @@
 <?php
+include("config/conf.php");
 include("config/sql.php");
 include("module/core.php");
 include("module/login.php");

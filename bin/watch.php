@@ -5,7 +5,7 @@ $page->show("header");
 
 $page->block("spanner-largeoffset", array("image" => "images/bg-anime.jpg", "title" => "watch stuff?", "content" => "Watch a select collection of anime and movies, with friends (if that's what you prefer!)", "href" => false, "text" => false));
 
-$json = json_decode(cfgc("https://owl.aftermirror.com/json.php"), true);
+$json = json_decode(cfgc(AM_WATCH_JSON), true);
 $col = array();
 $colt = array();
 include("module/cachedquery.php");
