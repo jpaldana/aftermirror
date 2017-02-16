@@ -1,6 +1,6 @@
 <?php
 if (!file_exists("cache/picker.cache") || time() - filemtime("cache/picker.cache") > 3600) {
-	$json = json_decode(cfgc("https://owl.aftermirror.com/json.php"), true);
+	$json = json_decode(cfgc(AM_WATCH_JSON), true);
 	foreach ($json as $file) {
 		$bn = trim(substr(preg_replace('#\s*\[.+\]\s*#U', ' ', strtr($file["file"], array("_Ep" => " - ", "_" => " "))), 0, -4), " .");
 		$title = $bn;
@@ -33,7 +33,8 @@ if (!file_exists("cache/picker.cache") || time() - filemtime("cache/picker.cache
 			$prefix = substr($title, 0, strripos($title, " "));
 			$suffix = substr($title, strripos($title, " ") + 1);
 		}
-		$col[$prefix][$suffix][$type] = "https://owl.aftermirror.com/" . $file["src"];
+		//var_dump($file);
+		$col[$prefix][$suffix][$type] = AM_WATCH_MIRROR . $file["src"];
 		
 		$sfx = "{$prefix}{$suffix}";
 		if (!isset($colt[$sfx]) || $colt[$sfx] < $file["time"]) $colt[$sfx] = $file["time"];
