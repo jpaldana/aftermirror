@@ -2,7 +2,7 @@
 /* -- vars */
 
 navigatorAjax = false; // override global ajax
-var socketIOserver = '//owl.aftermirror.com:8182/';
+var socketIOserver = '//' + server + ':8182/';
 var socket;
 
 var kazokuNotifyGranted = false;
@@ -229,13 +229,17 @@ socket.on('ready media', function(data) {
 		$('#kazoku-status-preload-progress-wrapper').show(200);
 		kazokuPreload = new XMLHttpRequest();
 		kazokuPreload.onload = function() {
-			$('#kazoku-media').attr('src', URL.createObjectURL(kazokuPreload.response));
+			//$('#kazoku-media').attr('src', URL.createObjectURL(kazokuPreload.response));
+			var blob = new Blob([kazokuPreload.response], { type: "video/mp4" });
+			$('#kazoku-media').attr('src', URL.createObjectURL(blob));
 			$('#kazoku-status-preload-progress-wrapper').hide(200);
 			kazokuLog('!', 'Preload complete.');
 		}
-		kazokuPreload.open("GET", $('#kazoku-media').attr('src'));
+		kazokuPreload.open("GET", $('#kazoku-media').attr('src'), true);
+		//kazokuPreload.setRequestHeader('Access-Control-Allow-Origin', '*');
 		kazokuPreload.onprogress = kazokuPreloadUpdateProgress;
-		kazokuPreload.responseType = 'blob';
+		//kazokuPreload.responseType = 'blob';
+		kazokuPreload.responseType = 'arraybuffer';
 		kazokuPreload.send();
 	}
 });

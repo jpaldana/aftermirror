@@ -155,6 +155,7 @@ else {
 		var room = '{$roomID}';
 		var preload_title = '{$preload_title}';
 		var preload = '{$preload}';
+		var server = '" . AM_SERVER . "';
 	</script>
 	";
 
