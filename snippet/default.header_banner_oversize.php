@@ -8,18 +8,11 @@
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
 		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
-		<?php
-			if (isset($data) && isset($data["css"])) {
-				foreach ($data["css"] as $css) {
-					echo "<link rel='stylesheet' href='{$css}' />";
-				}
-			}
-		?>
 	</head>
 	<body class="landing">
 
 		<!-- Header -->
-			<header id="header">
+			<header id="header" class="alt">
 				<h1><a href="/home.do">after|mirror</a></h1>
 				<a href="#nav">menu</a>
 			</header>
@@ -48,4 +41,13 @@
 					?>
 				</ul>
 			</nav>
+
 		<div class="minHeight">
+		<!-- Banner -->
+			<section id="banner" style="min-height: 100vh; position: relative;">
+				<div style="position: absolute; top: 50%; left: 0; right: 0; margin-top: -5em; width: 100%;">
+					<i class="icon fa-heart"></i>
+					<h2>hey there.</h2>
+					<p>welcome to after|mirror!</p>
+				</div>
+			</section>

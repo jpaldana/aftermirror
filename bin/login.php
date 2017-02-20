@@ -46,6 +46,10 @@ elseif (isset($_GET["logout"])) {
 	header("Location: /home.do?goodbye");
 }
 else {
+if (defined("AUTH_USER")) {
+	// return to home.
+	header("Location: /home.do?welcome");
+}
 $page->show("header_banner");
 ?>
 

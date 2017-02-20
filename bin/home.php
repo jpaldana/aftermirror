@@ -1,5 +1,5 @@
 <?php
-$page->show("header_banner");
+$page->show("header_banner_oversize");
 
 $page->block("spanner", array("image" => false, "title" => "What do you want to do?", "content" => "Feel free to explore the entire site. Though, be warned that it is still in development and things are probably broken...", "href" => false, "text" => false));
 

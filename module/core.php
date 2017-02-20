@@ -274,4 +274,7 @@ function cfgc($url, $cachetime = 3600) {
 	}
 	return file_get_contents($full);
 };
+function cleanANString($string) {
+	return preg_replace("/[^a-zA-Z0-9]+/", "", $string);
+}
 ?>
