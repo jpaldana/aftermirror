@@ -47,8 +47,29 @@ elseif (isset($_GET["logout"])) {
 }
 else {
 if (defined("AUTH_USER")) {
-	// return to home.
-	header("Location: /home.do?welcome");
+	if (isset($_GET["return"])) {
+		$dm = base64_decode($_GET["dm"]);
+		if ($dm !== $_SERVER["HTTP_HOST"]) {
+			if (isSomething($_GET["return"])) {
+				header("Location: https://{$dm}/auth.ps?qs=" . $_GET["return"] . "&_s=" . base64_encode(fnEncrypt($session)));
+			}
+			else {
+				header("Location: https://{$dm}/home.do?welcome");
+			}
+		}
+		else {
+			if (isSomething($_GET["return"])) {
+				header("Location: /passthru.do?qs=" . $_GET["return"]);
+			}
+			else {
+				header("Location: /home.do?welcome");
+			}
+		}
+	}
+	else {
+		// return to home.
+		header("Location: /home.do?welcome");
+	}
 }
 $page->show("header_banner");
 ?>
