@@ -28,7 +28,7 @@
 			<nav id="nav">
 				<ul class="links">
 					<li><a href="/home.do">Home</a></li>
-					<li><a href="/watch.do">Watch</a></li>
+					<li><a href="https://latenight.moe">Watch</a></li>
 					<li><a href="/music.do">Music</a></li>
 					<li><a href="/gallery.do">Gallery</a></li>
 					<li><a href="/library.do">Library</a></li>
