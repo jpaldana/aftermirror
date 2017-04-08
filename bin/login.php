@@ -14,10 +14,10 @@ if (isset($_POST["loginUser"]) && isset($_POST["loginPass"])) {
 		$dm = base64_decode($_GET["dm"]);
 		if ($dm !== $_SERVER["HTTP_HOST"]) {
 			if (isSomething($_GET["return"])) {
-				header("Location: https://{$dm}/auth.ps?qs=" . $_GET["return"] . "&_s=" . base64_encode(fnEncrypt($session)));
+				header("Location: https://{$dm}/auth.ps?qs=" . $_GET["return"] . "&_u={$username}&_s=" . base64_encode(fnEncrypt($session)));
 			}
 			else {
-				header("Location: https://{$dm}/home.do?welcome");
+				header("Location: https://{$dm}/home.do?welcome&_u={$username}");
 			}
 		}
 		else {
@@ -51,10 +51,10 @@ if (defined("AUTH_USER")) {
 		$dm = base64_decode($_GET["dm"]);
 		if ($dm !== $_SERVER["HTTP_HOST"]) {
 			if (isSomething($_GET["return"])) {
-				header("Location: https://{$dm}/auth.ps?qs=" . $_GET["return"] . "&_s=" . base64_encode(fnEncrypt($session)));
+				header("Location: https://{$dm}/auth.ps?qs=" . $_GET["return"] . "&_u=" . AUTH_USER . "&_s=" . base64_encode(fnEncrypt($session)));
 			}
 			else {
-				header("Location: https://{$dm}/home.do?welcome");
+				header("Location: https://{$dm}/home.do?welcome&_u=" . AUTH_USER);
 			}
 		}
 		else {
