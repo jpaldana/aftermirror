@@ -31,7 +31,7 @@ if (isset($_POST["loginUser"]) && isset($_POST["loginPass"])) {
 	}
 	else {
 		if (isSomething($_GET["return"])) {
-			header("Location: /login.do?username={$username}&qs={$_GET['return']}&error=" . AUTH_ERROR_CRYPT_INVALID_ERROR . "&dm={$_GET['dm']}#login");
+			header("Location: /login.do?username={$username}&return={$_GET['return']}&error=" . AUTH_ERROR_CRYPT_INVALID_ERROR . "&dm={$_GET['dm']}#login");
 		}
 		else {
 			header("Location: /login.do?username={$username}&error=" . AUTH_ERROR_CRYPT_INVALID_ERROR . "&dm={$_GET['dm']}#login");
